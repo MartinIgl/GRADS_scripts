@@ -1,0 +1,483 @@
+************************************************************************************
+*ESTE ARCHIVO RESUME MUCHOS COMANDOS IMPORTANTES QUE SE PUEDEN USAR PARA UN SCRIPT
+*V1.0 Martin Iglesias  github: SudestadaARG
+************************************************************************************
+reinit *limpio los datos y visualizacion.  Reinicia GrADS; saca todels ctl abiertos
+reset *Reinicia GrADS; pero sin sacar los ctl
+
+clear  *limpia la visualizacion . tambien con c
+set display color white *hace que el fondel de la visualizacion sea blanco
+************************************************************************************
+*Apertura de archivos
+open ejemplo.ctl (cualquier archivo, dat hdf4,hdf5)
+sfdelpen ejemplo.ctl (si es nc)
+xfdelpen ejemplo.ctl (si es nc)
+************************************************************************************
+*para saber que variables y como estan distribuidels los datos hay en el archivo
+q ctlinfo 
+q file Lista CTL abertos
+q file n (para especificar el ctl que quiero si tengo varios archivos abierto
+q dims (me muestra las dimensiones que se tienen)
+
+q define *lista tode las las variables definide las
+q defval ival jval *Muestra el valor del punto de gradel en ival, jval
+q dims *Muestra la dimension del ambiente colorrente
+q file n *Muestra informacion del n archivo CTL abierto
+q fwrite *Muestra el nombre del archivo usado en la operacion de fwrite
+q gxinfo *Lista las configuraciones gráficas
+q pos *Espera el click del mouse en la terminal, devuelve la posicion X,Y 
+q shades *Muestra niveles y colores e colores seteado en la opcion shaded
+q time *Muestra la informacion del dimencion tiempo
+q transform coord1 coord2 *transformacion de coordenade las, donde la transformacion puede ser:
+xy2w *XY coords to world coords
+xy2gr *XY coords to grid coords
+w2xy *world coords to XY coords
+w2gr *world coords to grid coords
+gr2w * grid coords to world coords
+gr2xy * grid coords to XY coords
+
+************************************************************
+*definir la resolucion de los mapas
+set mpdset hires (midres o lowres)
+
+************************************************************
+
+*definir las dimensiones espaciales y temporales de las variables y formas de los graficos
+*este seteadel es sudamerica y antartica con Pacifico  atlant extendidel
+set lat -80 5
+set lon -140 0
+
+*este seteadel es sudamerica y antartica con Pacifico extendidel
+set lat -80 5
+set lon -140 -20
+
+*este seteadel es ARG
+set lat -80 -20 
+set lon -90 -50
+
+* Las variables globales son variables que se mantienen a lo largo del script ... sintaxis:
+_var1 = 'variable-global1'
+*************************************************************************
+set gxout line (shaded, contour, vector, barbs, streamline
+*campos escalares
+set gxout shaded
+
+set gxout contour
+
+*colorea la reticula con el valor màs cercano al promedio entre los puntos.
+set gxout grfill 
+*en el caso de tener algun criterio o un umbral se puede asignar un color a un valor 
+set fgvals valor num_color 
+
+set gxout grid *da valores de grilla (lo mejor es combinarlo con grfill
+
+set gxout vector *hay que poner el par vector u v o w
+set gxout stream *lineas de colorriente
+set gxout barb *barbas
+
+
+
+*set gxout fwrite Grava (gera) arquivo grads.fwrite com dadels binário (sem gráfico)
+*set gxout linefill Lineas com preenchimento de colores entre 2 lineas
+*set gxout value Valor da estação (pontos de estações)
+*set gxout wxsym Símbolos da Carta Sinótica (condições de tempo)
+*set gxout findstn Encontra a estação mais próxima
+
+*************************************************************************
+
+*graficar variables o derivadels
+d Var
+display var
+define A = Var+1
+d A
+*************************************************************************
+*En el caso del viento para plotear los vectores de viento horizontal
+d u;v *muestra la suma de los vientos
+
+*si quiero mostrar cada x e y grids uso el skip
+d skip(u,xgrid,ygrid);v *ver d_uv.gs
+*************************************************************************
+*si quiero un colorte zonal o meridional
+set lat X *zonal  (longitud x altitud)
+set z 1 7
+set zlog on
+d var *puede ser u pero no v
+
+set lon X *meridional (latitud x altitud)
+set z 1 7 
+set zlog on
+d var *puede ser v pero no u
+*************************************************************************
+*PARA hacer hovmoller
+*meridional
+set t 1 last
+set lat X
+set lev X
+d var
+*zonal 
+set t 1 last
+set lon X
+set lev X
+d var
+
+*************************************************************************
+*si quiero un perfil vertical de algo, fijo las coordenade las, para varias alturas
+set lat -34.5205861 *te acerca al punto de grilla màs cercano
+set lon -58.5539916
+set z 1 7
+set zlog on
+d temp
+*************************************************************************
+
+*si quiero una serie o un grafico de barras 
+*seteo un lugar para un tiempo y varias long o lat. o al reves para varios tiempos
+set gxout bar
+set gxout errbarr
+*si quiero una linea que une puntos
+set gxout line
+*************************************************************************
+
+* scatter entre dels mediciones
+set gxout scatter
+d var1;var2
+
+*************************************************************************
+
+*si quiero saber estadisticas de mi conjunto de datos en el seteadel
+set gxout stat
+d var 
+*devuelve 
+*Data Type = grid
+*Dimensions = 0 -1
+*I Dimension = -7 to 1 Linear -40 5
+*J Dimension = -999 to -999
+*Sizes = 9 1 9
+*Undef value = -9.99e+08
+*Undef count = 0  Valid count = 9
+*Min, Max = 298.309 299.702
+*Cmin, cmax, cint = 298.2 299.9 0.1
+*Stats[sum,sumsqr,root(sumsqr),n]:     2692.47 805493 897.493 9
+*Stats[(sum,sumsqr,root(sumsqr))/n]:     299.164 89499.3 299.164
+*Stats[(sum,sumsqr,root(sumsqr))/(n-1)]: 336.559 100687 317.312
+*Stats[(sigma,var)(n)]:     0.492655 0.242709
+*Stats[(sigma,var)(n-1)]:   0.52254 0.273048
+
+*************************************************************************
+*proyecciones planetarias
+set map 1 1 10 *SET MAP values:  color = 1  style = 1  thickness = 10
+set mproj latlon *viene por default esta proyeccion
+
+*pone a escala las cosas
+set mproj scaled
+
+*estereográfica polar (HS)
+set mproj sps
+set lon –100 0
+set lat –90 0
+d rain
+*lambert conica desde el polo . para argentina y oceanos
+set mproj lambert
+set lon -140 0
+set lat -90 0
+
+*projecciones planetarias
+reset
+set mproj robinson *tambien esta set mproj orthogr (ortografica)
+set lon –180 180
+set lat –90 90
+*tambien esta  (ortografica)
+set mproj orthogr
+*centrada en el pacifico
+set mproj mollweide
+ 
+
+*si solo quiero ver los valores sin los continentes
+set mproj off
+
+
+
+**********************************************
+*codigo de colores
+0 = White
+1 = black
+2 = red
+3 = green
+4 = blue
+5 = cyan
+6 = magenta
+7 = yellow
+8 = orange
+9 = purple
+10 = yellow/green
+11 = med. Blue
+12 = dark yellow
+13 = aqua
+14 = dark purple
+15 = grey
+
+Secuencia de los colores del arcoiris: 9 14 4 11 5 13 3 10 7 12 8 2 6
+Pode usar os comandels:
+set ccolor rainbow
+set ccolor revrain *revierte los colores del arco-iris
+*codigo de lineas
+0 = none
+1 = solid
+2 = long de lash
+3 = short de lash
+4 = long short de lash
+5 = delts
+6 = delt de lash
+7 = delt delt de lash
+
+*codigo de formas 
+0 = none
+1 = cross
+2 = open circle
+3 = closed circle
+4 = open square
+5 = closed square
+6 = X
+7 = diamond
+8 = triangle
+9 = solid triangle
+10 = open circle with vertical line
+11 = open oval
+*codigo de simbolos (ver imagen)
+
+
+****************************************
+*comandos para modificar los tipos de graficos
+
+*Gráficos 1-D (gxout = line):
+set ccolor código-de-color *Color de la linea
+set cthick valor *Espesor de las lineas (1 a 10)
+set cstyle código-de-estilo *Estilo de linea
+set cmark código-del-marker *color del marcador 
+set missconn on | off *Conecta las lineas de missing data
+
+*Gráficos del tipo (gxout = bar ou errbar):
+set bargap valor *Gap entre barras
+set barbase valor bottom | top *Plotea barras por encima o por debajo del valor
+set baropts filled | outline *Barras llenas o no
+set cthick valor *espesor de las lineas (1 a 10)
+
+
+Gráficos del tipo (gxout = linefill):
+set lfcols color1 color2 *colores 1 y 2 entre as isolineas
+
+
+Gráficos del tipo (gxout = contour):
+set ccolor código-de-color *Color de la isolinea
+set cthick valor *Espesor de las isolineas (1 a 10)
+set cstyle código-de-estilo *Estilo de la isolinea
+set cterp on | off *Aplica o no el suavizado
+set cint valor *Intervalo entre las isolineas
+set cmax valor *Controla el valor Maximo de las isolineas
+set cmin valor *Controla el valor Mínimo de las isolineas
+set black valor1 valor2 *Contornos omitidos entre valor1 e valor2
+set clevs valor1 valor2 ...*Plotea valores especificados
+set ccols color1 color2 ... * Especifica colores para clevs
+set rbrange valor1 valor2 *valor1 e valor 2 para rainbow
+set rbcols color1 color2 ... *Especifica colores para clevs
+set rbcols auto *colores en rainbow
+set clab on | off | forced *Muestra o no los valores de lass isolineas
+set clskip valor-del-intervalo *valores de las isolineas en intervalos 
+set clopts color estilo tamaño *Especifica color, estilo e tamaño del label
+set csmooth on | off *Aplica suavizado
+
+
+Gráficos del tipo (gxout = shaded or grfill):
+set cint valor *Intervalo entre las isolineas
+set cmax valor *Controla el valor Maximo de las isolineas
+set cmin valor *Controla el valor Mínimo de las isolineas
+set black valor1 valor2 *Contornos omitidels entre valor1 e valor2
+set clevs valor1 valor2 ... *Plotea valores especificadels
+set ccols color1 color2 ... *Especifica colores para clevs
+set rbrange valor1 valor2 *valor1 e valor 2 para rainbow
+set rbcols color1 color2 ... *Especifica coloes para clevs
+set csmooth on | off *Aplica suavizado
+
+
+Gráficos del tipo (gxout = grid):
+set dignumber numero *número dígitos despues de la coma decimal
+set digsize numero *tamañoo de los números
+
+Gráficos del tipo (gxout = vector ou barb):
+set ccolor código-de-color *Color de los vectores
+set cthick valor *Espesor de los vectores (1 a 10)
+set arrlab on | off *muestra o no vector de referência abajo del plot 
+set arrscl valor magnitude *comprime el vector de acuerdo con la magnitud
+set arrowhead valor *tamaño de la cabeza de la flecha
+set cint valor *Intervalo
+set cmax valor *Controla o valor Maximo
+set cmin valor *Controla o valor Mínimo
+set black valor1 valor2 *no plotea vectores entre valor1 e valor2
+set clevs valor1 valor2 ... *Plotea valores especificados
+set ccols color1 color2 ... *Especifica colores para clevs
+set rbrange valor1 valor2 *valor1 e valor 2 para rainbow
+set rbcols color1 color2 ... *Especifica colores para clevs
+
+
+Gráficos del tipo (gxout = scatter):
+set cmark código-del-marker *Color del marcador
+set digsize numero *tamaño de los números
+set ccolor código-de-color  *Especifica color
+set vrange valor1 valor2 *rango entre valor1 e valor2 del eje y
+set vrange2 valor1 valor2 *rango entre valor1 e valor2 del eje x
+
+
+Gráficos del tipo (gxout = fgrid):
+set fgvals valor color valor color ..*especifica valores e colores para fgrid
+
+
+Gráficos del tipo (gxout = stream):
+set strmden valor *densidad de las lineas de colorrente
+set ccolor código-de-color *Color de la isolinea
+set cint valor *Intervalo entre las isolineas
+set cmax valor *Controla el valor Maximo de las isolineas
+set cmin valor *Controla el valor Mínimo de las isolineas
+set cthick valor *Espessura de las isolineas (1 a 10)
+set black valor1 valor2 *Espesor de las isolineas (1 a 10)
+set clevs valor1 valor2 ... *Plotea valores especificados
+set ccols color1 color2 ... *Especifica colores para clevs
+set rbrange valor1 valor2 *valor1 y valor 2 para rainbow
+set rbcols color1 color2 ... *Especifica colores para clevs
+
+
+Dadels de estações; Gráfico del tipo (gxout = value):
+set digsize numero *tamaño dels números
+set ccolor código-de-color *Especifica color
+set stid on | off2 *mostra ou não id da estação
+set cthick valor *Espessura (1 a 10)
+
+
+Dadels de estações; Gráfico del tipo (gxout = barb):
+set digsize numero *tamaño dels números
+set ccolor código-de-color *Especifica color
+set cthick valor *Espessura (1 a 10)
+
+
+Dadels de estações; Gráfico del tipo (gxout = wxsym):
+set ccolor código-de-color *Especifica color
+set cthick valor *Espesor (1 a 10)
+set digsize numero *tamaño dels números
+set wxcols color1 color2 ... *Especifica colores para symbols
+
+
+Dadels de estações; Gráfico del tipo (gxout = model):
+set ccolor código-de-color *Especifica color
+set cthick valor *Espesor (1 a 10)
+set digsize numero *tamaño de los números
+set wxcols color1 color2 ...*Especifica colores para symbols
+set mdlopts noblank | blank | dig3 | nodig3 *opciones de modelo
+
+****************************************************************************
+* Comandels para controlar ejes, mapas, etc:
+set grid on | off | horizontal | vertical *Lineas de grade conforme opções
+set zlog on | off *Escala vertical logarítmica ou não
+set xaxis inicio fim incremento *range eje x del inicio ao fim com incremento
+set yaxis inicio fim incremento *range eje y del inicio ao fim com incremento
+set xlevs label1 label2 ...*labels específicos para eje x
+set ylevs label1 label2 ...*labels específicos para eje y
+set xlint intervalo *intervalo para eje x
+set ylint intervalo *intervalo para eje y
+set xyrev on *invierte los ejes
+set xflip on *invierte la orden del eje x
+set yflip on *invierte la orden del eje y
+set xlopts color espesor tamaño *color espesor del tamaño del label eje x
+set ylopts color espesor tamaño *color espesor del tamaño del label eje y
+set annot color espesor *color del espesor del string (draw title, etc)
+set mpdset lowres | mres | hires | brmap *resolucion de los mapas
+set map color estilo espesor *color, estilo el espesor de la linea del mapa
+set mpdraw on | off *plotea o en el mapas
+set grads on | off *coloca o en el logotipo del GrADS
+
+
+*escribir titulo y ejes
+draw xlab nombre_ejex
+draw ylab nombre_ejey
+draw title Titulo/subtitulo
+
+
+*Para controlar el texto o el diseño:
+set line <color> <estilo> <espesor>
+set string <color> <alineamiento> <espesor> <rotacao>
+
+* comando para controlar la posicion del texto (string):
+set string color alineamiento espesor rotação
+Códigos para alineamiento:
+l = left
+c = center
+tl = top left
+tc = top center
+bl = bottom left
+bc = bottom center
+r = right
+tr = top right
+br = bottom right
+
+set strsiz comprimento altura
+set font número *tipo de la fuente (0 a 5)
+
+
+draw string x y Texto *Escribe texto en el ponto (x,y)
+draw line x1 y1 x2 y2 *Diseña una linea entre (x1,y1) (x2,y2)
+draw rec xlo ylo xhi yhi *Diseña un rectangulo
+draw recf xlo ylo xhi yhi *Diseña un rectangulo sólidel
+draw polyf x1 y1 x2 y2 ... xn yn *Diseña un polígono entre (x1,y1) (x2,y2) ... (xn,yn)
+draw mark marktype x y size *Diseña una forma en el punto (x,y)
+draw wxsym symbol x y size color thickness *Diseña un símbolo de tiempo en el punto (x,y)
+
+
+****************************************************************************
+*Tamaño de la pagina virtual y print area
+*tamaño de landscape grads -l 11x8.5
+*tamaño de potrait grads -p 8.5x11
+
+*virtual Page
+set vpage xmin xmax ymin ymax Print Área
+set vpage off 
+*Print area
+set parea xmin xmax ymin ymax
+set parea off
+
+****************************************************************************
+
+* say / prompt
+*para proporcionar información o hacer preguntas al usuario a través del terminal (prompt del GrADS), de acuerdo con la sintaxis a continuación:
+say 'expressão'
+prompt expressão
+
+* pull
+* carga la información proporcionada por el usuario a través del teclado, con la sintaxis:
+pull variable
+
+
+* if / else / endif *una forma de controlar la ejecucion del script... la sintaxis es:
+if exprecion
+	linea de comando
+	.
+else
+	linea de comando
+	.
+endif
+
+
+*Ejemplo:
+if (i = 10) ; j = 20 ; endif
+
+* while / endwhile *una forma de controlar laa ejecucion del script...la sintaxis es:
+while
+	linea de comandel
+	.
+enwhile
+
+*Ejemplo: haciendo un loop temporal
+'open n.ctl'
+tt = 1
+while (tt <= 25)
+	'set t 'tt
+	'd rain'
+	'c'
+	tt = tt + 1
+endwhile
