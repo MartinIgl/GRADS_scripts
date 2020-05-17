@@ -3,15 +3,23 @@
 *v1.1 Github: huayratoro, reversionado por SudestadaARG
 ********************************************************************
 *Se aclara que las variables que se usan es Temperature, u v wind,rh, hgt,q (deben estar incluidas en el ctl)
+*aclaracion, el jaecol y cbarn deben estar en la misma carpeta del .dat o .idx, en caso de que no se corra bien puede quitar el .gs
 
 'reinit'
 'reset'
 'set display color white'
 'c'
+
 *Defino la ruta del archivo
 prompt 'Indique el nombre del Archivo ctl (si no esta en la misma carpeta pongalo con la ruta): '
 pull CTL
 
+*Defino la ruta de guardado
+prompt 'Indique la ruta donde quiere guardar(si quiere guardarlo en la carpeta donde abrio la terminal (enter): '
+pull path
+
+*Abro el archivo
+'open 'CTL
 
 *defino variables previamente
 'define pi=3.14159'
@@ -29,6 +37,8 @@ maskout=1500
 *este seteado es ARG
 'set lat -80 -20'
 'set lon -90 -50'
+'set mpdset hres'
+'set poli on'
 
 time=1
 *si quiero graficar la topografia, definirla como el geopot en superficie
@@ -44,7 +54,6 @@ deltat=6
 timefin=121
 while(time<timefin)
 'set grads off'
-'set poli on'
 
 'set t 'time
 ***---***
@@ -114,7 +123,7 @@ say 'DEFINIENDO LAS VARIABLES CONV HUM'
 
 * titulos
 'draw title 'fecha' \ 850mb: Conv de humedad(%,somb), TPE(K), vto(knots)'
-'printim conv_q_vto_'time'.png png white'
+'printim 'path'/conv_q_vto_'time'.png png white'
 'clear'
 say '************'
 time=time+deltat

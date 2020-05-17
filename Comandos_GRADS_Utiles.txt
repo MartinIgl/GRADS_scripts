@@ -391,7 +391,7 @@ set mpdset lowres | mres | hires | brmap *resolucion de los mapas
 set map color estilo espesor *color, estilo el espesor de la linea del mapa
 set mpdraw on | off *plotea o en el mapas
 set grads on | off *coloca o en el logotipo del GrADS
-
+ set poli on|off *Selects whether you want political boundries drawn for the mres or hires map data sets. The default is on.
 
 *escribir titulo y ejes
 draw xlab nombre_ejex
