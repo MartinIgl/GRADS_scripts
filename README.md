@@ -10,4 +10,5 @@ CAPE_promvert.gs   ---> perfil vertical promedio de cape en un dominio (por el m
 conv_humedad_850.gs ---> convergencia de humedad en 850hpa
 Comandos_GRADS_Utiles.txt  ---> una guia de comandos utiles para utilizar 
 
-Ante cualquier cambio o sugerencia plantear issues  o pull request. Cualquier novedad o adiciòn de scprit contactarse por privado para mejorar o reeditarlos.
+Ante cualquier cambio o sugerencia plantear issues o pull request. 
+Cualquier novedad o adiciòn de scprit contactarse por privado para mejorar o reeditarlos.
