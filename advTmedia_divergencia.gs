@@ -12,6 +12,10 @@
 *Defino la ruta del archivo
 prompt 'Indique el nombre del Archivo ctl (si no esta en la misma carpeta pongalo con la ruta): '
 pull CTL
+
+*Abro el archivo
+'open 'CTL
+
 *Defino la ruta de guardado
 prompt 'Indique la ruta donde quiere guardar(si quiere guardarlo en la carpeta donde abrio la terminal (enter): '
 pull path
@@ -57,6 +61,7 @@ pull tiempo
 
 * Graficado
 'run jaecol.gs'
+'set grads off'
 
 'set gxout shaded'
 'set clevs -30 -20 -10 -5 -2.5 2.5 5 10 20 30'

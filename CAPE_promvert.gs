@@ -51,6 +51,7 @@ pull CTL
 *defino el CAPE promedio para todos los niveles
 'CAPEPar=(287*(tprima/tent))*(1*750)'
 *grafico el cape
+'set grads off'
 'd CAPEPar' 
 
 *Nombro los ejes y titulo

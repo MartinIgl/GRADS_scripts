@@ -27,7 +27,6 @@ pull path
 'set mpdset hres'
 'set poli on'
 
-
 *Indico el tiempo que quiero .
 prompt 'Indique el tiempo a graficar: '
 pull tiempo
@@ -39,19 +38,21 @@ say 'DEFINIENDO Divergencia'
 'define u=smth9(UGRDprs)'
 'define v=smth9(VGRDprs)'
 'define divergencia=hdivg(u,v)'
-
 'set z 1'
 'divergenciam=mean(divergencia,z=5,z=13)'
 
 
 * Graficado
 'run jaecol.gs'
+'set grads off'
 
+*Divergencia
 'set gxout shaded'
 'set clevs -3 -2 -1 -0.5 -0.25 0.25 0.5 1 2 3'
 'set rbcols 49 47 45 43 42 0 22 23 25 27 29'
 'd maskout(divergenciam*1e5,1000-HGTsfc)'
 'run cbarn.gs'
+
 *ploteo la presion o el geo potencial
 'set gxout contour'
 'set cint 4'
@@ -59,7 +60,6 @@ say 'DEFINIENDO Divergencia'
 *'d HGTprs'
 
 'draw title Divergencia media*1e-5 (somb) SLP (cont)'
-
 *Guardamos la fecha en una variable (para usarla en el nombre de la figura).
 
 'q time'

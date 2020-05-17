@@ -1,5 +1,5 @@
 ********************************************************************
-*Script que grafica la adveccion diferencial de vorticidad
+*Script que grafica q y vto a 900hpa
 *v1.1 Github: huayratoro, reversionado por SudestadaARG
 ********************************************************************
 *Se aclara que las variables que se usan es Temperature, u v wind,rh, hgt,q (deben estar incluidas en el ctl)
@@ -22,22 +22,19 @@ pull path
 
 
 *defino variables previamente
-'define pi=3.14159'
-'define r=6371000'
 maskout=1500
-
-*si se quiere definir el area de printeo
-*xlow=0.2
-*xhigh=10.5
-*ylow=0.8
-*yhigh=7.0
-*'set parea 'xlow' 'xhigh' 'ylow' 'yhigh
-
 *este seteado es ARG
 'set lat -80 -20'
 'set lon -90 -50'
 'set mpdset hires'
 'set poli on'
+'set map 79 1 5'
+
+'set ylpos 0 l'
+'set xlint 5'
+'set ylint 5'
+'set ylopts 1 4 0.12'
+'set xlopts 1 4 0.12'
 
 *La cantidad de tiempos depende de cuantos archivos cada 6h tengas, se puede modificar.
 *prompt 'Indique la cantidad de FCST o analisis: '
@@ -52,51 +49,55 @@ time=1
 while(time<timefin)
 'set t 'time
 ***---***
-'define vort=hcurl(ugrdprs(lev=500),vgrdprs(lev=500))'
-'define dy=r*2*pi*cdiff(lat,y)/360'
-'define dx=r*2*pi*cdiff(lon,x)*cos(lat*2*pi/360)/360'
-'define dtx=cdiff(vort,x)/dx'
-'define dty=cdiff(vort,y)/dy'
-'define av5=-ugrd10m*dtx-vgrd10m*dty'
+*Para la fecha correspondiente
+'q time'
+line1=sublin(result,1)
+itime1=subwrd(line1,3)
+fecha=substr(itime1,1,12)
 ***---***
-******* para Adveccion hor para 900 hPa
-'set lev 900'
-'define vortd=hcurl(ugrdprs,vgrdprs)'
-'define dy=r*2*pi*cdiff(lat,y)/360'
-'define dx=r*2*pi*cdiff(lon,x)*cos(lat*2*pi/360)/360'
-'define dtx=cdiff(vortd,x)/dx'
-'define dty=cdiff(vortd,y)/dy'
-'define av9=-ugrd10m*dtx-vgrd10m*dty'
+'set grads off'
+*DEFINIENDO LAS VARIABLES
+say 'DEFINIENDO LAS VARIABLES HUM ESPECIFICA 900'
+'define terreno=hgtsfc(lev=1000)'
+'define topo=hgtsfc'
+'define tmp=tmpprs(lev=900)'
+'define hr=rhprs(lev=900)'
+'define u=ugrdprs(lev=900)*1.94'
+'define v=vgrdprs(lev=900)*1.94'
+'define et=(-2937.4/(tmp))-(4.9283*log10(tmp))+22.5518'
+'define es=pow(10,et)*10'
+'define e=es*0.01*hr'
+'define q=0.622*e/(lev-e)'
 
-'define advdif=-((av5-av9)/(hgtprs(lev=500)-hgtprs(lev=900)))'
-
-say 'variables definidas'
-
-*GRAFICADO
+***---***
 'run jaecol.gs'
-'set grads off'
-
-*Se grafica la adveccion diferencial entre 900 y 500 hpa
+* Humedad especifica
 'set gxout shaded'
-'set clevs -12 -8 -6 -4 -3 -2 -1  0  1 2 3 4 6 8 12'
-'set rbcols 49 48 46 44 43 42 41 0 61 62 63 65 67 68 69'
-'d smth9(advdif*1000000000000)'
-*geopotencial en 500hpa
-'set gxout contour'
-'set cint 50'
-'set ccolor 1'
-'d hgtprs(lev=500)'
-'run cbarn.gs'
 'set grads off'
+'set lev 900'
+'set clevs  5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20'
+'set rbcols 0 23 22 21 31 32 33 41 42 43 44 55 56 57 58 59'
+'define hum=q*1000'
+'d smth9(hum)'
+'run cbarn'
 
-*Sombreo en gris la zona enmascarada
+* Viento
+'set gxout barb'
+'set ccolor 1'
+'set cthick 2'
+'set grads off'
+'d skip(u,12);skip(v,12)'
+
+* terreno
 'set gxout grfill'
 'set clevs 1500'
 'set ccols 73 73'
-'d maskout(hgtsfc,hgtsfc-'maskout')'
+'d maskout(terreno,terreno-'maskout')'
 
 * titulos
-'draw title 'fecha' \ Adv diferencial de vorticidad (somb, 1e12) capa 900-500 mb'
-'printim 'path'/adv_vort_'time'.png png white'
+'draw title 'fecha' \ 900mb: Humedad especif(g/kg,somb), vto(knots)'
+'printim 'path'/qa_vto_'time'.png png white'
 'clear'
-
+say '************'
+time=time+deltat
+endwhile

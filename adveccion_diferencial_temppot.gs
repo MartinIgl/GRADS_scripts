@@ -72,6 +72,8 @@ say 'DEFINIENDO LAS VARIABLES TEMP POT EQIV'
 
 * Graficado
 'run jaecol.gs'
+'set grads off'
+
 *Los contornos de temp pot equiv
 'auxiliar=te-te+1'
 'd maskout(auxiliar,1.5e-5-gradte)'
@@ -91,11 +93,13 @@ line1=sublin(result,1)
 itime1=subwrd(line1,3)
 fecha=substr(itime1,1,12)
 
+'draw title Temperatura potencial equivalente (K)(sombreado) y viento (knts) en 'niv'hPa’
 'printim 'path'/masa_de_aire_'fecha'.png png white'
 'c'
 
 *******************************************************
 *Grafico la humedad relativa
+'set grads off'
 
 'd maskout(auxiliar,1.5e-5-gradte)'
 'set gxout shaded'
@@ -108,10 +112,13 @@ fecha=substr(itime1,1,12)
 'set ccolor 1'
 'd skip(UGRDprs(lev='niv'),6);VGRDprs(lev='niv')'
 
+'draw title Humedad relativa (g/kg)(sombreado) y viento (knts) en 'niv'hPa’
+
 'printim 'path'/masa_de_aire_q_'fecha'.png png'
 'c'
 *******************************************************
 *Grafico la temperatura
+'set grads off'
 
 'd maskout(auxiliar,1.5e-5-gradte)'
 'set gxout shaded'
@@ -122,6 +129,8 @@ fecha=substr(itime1,1,12)
 'set gxout vector'
 'set ccolor 1'
 'd skip(UGRDprs(lev='niv'),6);VGRDprs(lev='niv')'
+
+'draw title Temperatura(K)(sombreado) y viento (knts) en 'niv'hPa’
 
 'printim 'path'/masa_de_aire_t_'fecha'.png png'
 

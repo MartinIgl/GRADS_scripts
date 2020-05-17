@@ -14,12 +14,13 @@
 prompt 'Indique el nombre del Archivo ctl (si no esta en la misma carpeta pongalo con la ruta): '
 pull CTL
 
+*Abro el archivo
+'open 'CTL
+
 *Defino la ruta de guardado
 prompt 'Indique la ruta donde quiere guardar(si quiere guardarlo en la carpeta donde abrio la terminal (enter): '
 pull path
 
-*Abro el archivo
-'open 'CTL
 
 *defino variables previamente
 'define pi=3.14159'
@@ -53,7 +54,6 @@ time=1
 deltat=6
 timefin=121
 while(time<timefin)
-'set grads off'
 
 'set t 'time
 ***---***
@@ -94,6 +94,8 @@ say 'DEFINIENDO LAS VARIABLES CONV HUM'
 
 * Graficado
 'run jaecol.gs'
+'set grads off'
+
 *Se grafican los valores negativos (convergencia)
 'set gxout shaded'
 'set clevs -80 -60 -40 -30 -20 -10'

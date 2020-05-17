@@ -49,7 +49,6 @@ deltat=6
 timefin=12
 time=1
 while(time<timefin)
-'set grads off'
 
 'set t 'time
 ***---***
@@ -118,6 +117,8 @@ say 'variables definidas'
 
 *GRAFICADO
 'run jaecol.gs'
+'set grads off'
+
 *Se grafica la adveccion diferencial entre 900 y 500 hpa
 
 'set gxout shaded'

@@ -25,7 +25,11 @@ pull path
 'set lat -80 -20'
 'set lon -90 -50'
 'set mpdset hres'
+'set map 1 1 0'
 'set poli on'
+
+'set parea 0.5 5.25 0 8.5'
+'set digsiz 0.105'
 
 *Indico el tiempo que quiero .
 prompt 'Indique el tiempo a graficar: '
@@ -49,8 +53,9 @@ pull tiempo
 
 
 *Graficamos los resultados.
-*variacion de gamma con el tiempo
 'run jaecol.gs'
+'set grads off'
+*variacion de gamma con el tiempo
 'set gxout shaded'
 'set clevs -3.5 -2 -1 -0.5 -0.25 0.25 0.5 1 2 3.5'
 'set rbcols 49 47 45 43 42 0 22 23 25 27 29'

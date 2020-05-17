@@ -65,7 +65,7 @@ fecha=substr(itime1,1,12)
 say 'DEFINIENDO LAS VARIABLES A(TMP)'
 'define terreno=hgtsfc(lev=1000)'
 'define tmp=tmpprs(lev='niv')'
-'define u=ugrdprs(lev='niv')'
+'define u=ugrdprs(lev='niv')' 
 'define v=vgrdprs(lev='niv')'
 'define alturas=hgtprs(lev=1000)'
 ***---***
@@ -75,9 +75,10 @@ say 'DEFINIENDO LAS VARIABLES A(TMP)'
 'dy = cdiff(lat,y)*pi/180'
 
 
-
-*Se grafica la adveccion termica
+*GRAFICO
 'run jaecol.gs'
+'set grads off'
+*Se grafica la adveccion termica
 
 'set gxout shaded'
 'set clevs -4 -2.5 -2 -1.5 -1.3 -1.2 -1.1 -1 -0.5 0.5 1 1.1 1.2 1.3 1.5 2 2.5 4'
@@ -105,6 +106,49 @@ say 'DEFINIENDO LAS VARIABLES A(TMP)'
 
 'printim 'path'/t_adv'time'.png png white'
 'c'
+********************************************************
+*Gradiente termico
+
+'set grads off'
+*transforma latitude e longitude de graus para radianos
+'define latr=lat*3.1415/180'
+'define lonr= lon*3.1415/180'
+*raio da Terra
+'define r=6.371e6'
+*variacao em relacao a latitude
+'define dy=r*cdiff(latr,y)'
+*variacao em relacao a longitude
+'define dx=r*cos(latr)*cdiff(lonr,x)'
+*variacao de temperatura com long
+'define dtx=cdiff(tmpprs(lev='niv'),x)'
+*variacao da temperatura com relacao a lat
+'define dty=cdiff(tmpprs(lev='niv'),y)'
+*unidade: oC/km
+'define dtdx=dtx/dx*1000'
+'define dtdy=dty/dy*1000'
+
+*Temperatura
+'set cint 3'
+'d tmpprs(lev='niv')-273'
+*Gradiente de T
+'set gxout contour'
+'set arrscl 0.3 0.01'
+'d skip(dtdx,5,5);dtdy;mag(dtdx,dtdy)'
+
+
+* Sombreo en gris la zona enmascarada
+'set gxout grfill'
+'set clevs 1500'
+'set ccols 73 73'
+'d maskout(terreno,terreno-'maskout')'
+
+
+* titulos
+'draw title 'fecha' \ Temperatura 2m (oC) e Grad T (oC/km) en 'niv'hpa'
+'printim 'path'/GradT_'time'.png png white'
+'c'
+
 say '************'
 time=time+deltat
 endwhile
+

@@ -80,15 +80,16 @@ say 'DEFINIENDO VARIABLES DE A(HUM)'
 'dy = cdiff(lat,y)*pi/180'
 
 
-*Se grafica la adveccion de humedad en un nivel
+*GRAFICO
 'run jaecol.gs'
+'set grads off'
+*Se grafica la adveccion de humedad en un nivel
 
 'set gxout shaded'
 'set clevs -2 -1.5 -1.4 -1.3 -1.2 -1 -0.9 -0.8 -0.7 -0.6 -0.5 -0.4 -0.3 0 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.2 1.3 1.4 1.5 2'
 'set rbcols 87 86 85 84 83 29 28 27 26 25 24 23 0 33 34 35 41 42 43 44 45 46 47 48 49'
 
 'd smth9(3600*(-1*((u*dtx)/(cos(lat*pi/180)*dx) + v*dty/dy)/6.37e6))*1000'
-
 'run cbarn.gs'
 
 * Grafico las barbas de viento en nudos(inicialmente en m.s-1)
